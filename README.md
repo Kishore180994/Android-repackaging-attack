@@ -1,45 +1,59 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+Android Repackaging Attack and Prevention.
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
+This Repository will contain source code for two different Android Projects.
+1. Android Project with Malicious Code Injected.
+2. Android Project with AspectJ(Inline Reference Monitor) Installed which will help the Android system to defend against that malicious code.
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+And also we have added the both apk's which looks same.
+1. Attack.apk (With malicious code injected) - Do Not Install unless you dont want your contacts.
+2. Prevent.apk (With AspectJ Installed) - Don't worry, you can install this. Your contacts are safe.
 
----
+In order to Demonstration, 
 
-## Edit a file
+//Attack
+Step 1. Create Contacts, If there are no contacts.
+Step 2. Install Attack.apk
+Step 3. Open the "Attack" application, and also check your contacts if they are still there ot not.
+Step 4. Restart yout device.
+Step 5. Open you contacts. BOOOOM! Your contacts are deleted.
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
+//Prevent
+Step 6. Create contacts.
+Step 7. Uninstall the "Attack.apk" and Reinstall "Prevent.apk"
+Step 8. Open the APK.
+Step 9. Restart the device.
+Step 10. Check your contacts. They should be safe.
 
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
+In order to Reverse Engineer, Malicious code Injection and Repackaging the application, follow below steps:
 
----
+Reverse Engineering:
+1. Download any apk from google store.
+2. use APKTOOL to dissemble the "Applicaiton-apk" using "apktool d ****.apk".
+3. This will create a folder, then relace the ".smali"(malicious) code inside the smali folder of disembled application folder.
+*NOTE: You can dowload the malicious code from the SEEDLABS.
+4. Rebuild the apk file from that folder using the coomand "apktool b <FOLDERNAME>"
 
-## Create a file
+Signing the apk:
+Before starting the application, Make sure you have these tools - KeyTool and JarSigner.
+5. Create a private key to sign the application using keytool.
+keytool -alias <aliasName> -genkey -v -keystore my-release-key.keystore -keyalg RSA -keysize 2048 -validity 10000
 
-Next, you’ll add a new file to this repository.
+6. Sign the apk using the private key which is generated(my-release-key.keystore) and JarSigner.
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore <application*apk> <aliasName>
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
+7. Install the application. If youh have sny issues regarding "NO CERTIFICATES", delete the META-INF from the apk and redo step 5 and step 6.
 
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+For Prevention:
 
----
-
-## Clone a repository
-
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
-
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
-
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+8. Develope an aspectJ file.
+9. Use dex2jar(Download latest from google) to create jar file of an APK using the command: "sh d2j-dex2jar.sh -f -o (ApplicaitonName).apk".
+10. This will create the jar file.
+11. Now use ajc(AspectJ compiler) to weave aspectJ with the jar file. Here is the command: "ajc -cp ".:/usr/share/java/aspectjrt.jar" -inpath Vignan-dex2jar.jar (YourAspectFile).aj -outjar ModifiedFolder.jar -Xlint:ignore"
+*NOTE: Do not use -Xlint:Ignore paramter, It ignore all the erros and warning and creates the JAR file. We used becuase, we got all useless warning, so we wanted to avoid those.
+12. Now we will have ModifiedFile.jar, We will use jar2dex to create classes.dex from this modifiedJAR.
+13. Create a copy of the Application, and we will replcae the Original Classes.dex with the Modified Classes.jar using the command "zip -r (YourApplication).apk classes.dex".
+14. Now we have the modified APK.
+15. Delete the META-INF from the APK.
+16. Follow step 5 and step 6 for signing the apk.
+17. Install the apk.
+18. Attack and its prevention is successful.
