@@ -1,12 +1,8 @@
 Android Repackaging Attack and Prevention.
 
-This Repository will contain source code for two different Android Projects.
-1. Android Project with Malicious Code Injected.
-2. Android Project with AspectJ(Inline Reference Monitor) Installed which will help the Android system to defend against that malicious code.
-
-And also we have added the both apk's which looks same.
-1. Attack.apk (With malicious code injected) - Do Not Install unless you dont want your contacts.
-2. Prevent.apk (With AspectJ Installed) - Don't worry, you can install this. Your contacts are safe.
+This Repository will contain APK files for two different Android Projects.
+1. Android APK with Malicious Code Injected.
+2. Android APK with AspectJ(Inline Reference Monitor) Installed which will help the Android system to defend against that malicious code.
 
 In order to Demonstration, 
 
